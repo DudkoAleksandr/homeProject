@@ -1,6 +1,9 @@
 const tasksResulat = document.querySelector(".tasks__result");
 const completedTasks = document.querySelector(".completed");
 const uncompletedTask = document.querySelector(".uncompleted");
+const addTask = document.querySelector(".add-task");
+const addBtn = document.querySelector(".addbtn");
+const searchTask = document.querySelector(".search-task");
 
 const tasks = [
   {
@@ -54,10 +57,30 @@ function getUncompletedTasksCount() {
 getUncompletedTasksCount();
 
 function getImportantTasks() {
-  return tasks.filter(task => task.important === true);
+  return tasks.filter((task) => task.important === true);
 }
-console.log(getImportantTasks())
+// console.log(getImportantTasks());
 
-function getLongestTask(){
-  
+function getLongestTask() {
+  let longTask = tasks[0];
+  for (let i = 0; i < tasks.length; i++) {
+    if (tasks[i].title.length > longTask.title.length) {
+      longTask = tasks[i];
+    }
+  }
+  return longTask;
 }
+// console.log(getLongestTask());
+
+addBtn.addEventListener('click', () => {
+  tasks.push({title: addTask.value})
+  tasksResulat.innerHTML = ''
+  renderTask()
+})
+
+searchTask.addEventListener('input', () => {
+    function findTask(title){
+      return tasks.find(tasks => tasks.title === title)
+    }
+  console.log(findTask(searchTask.value));
+})
