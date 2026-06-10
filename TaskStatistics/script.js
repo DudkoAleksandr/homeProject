@@ -5,22 +5,23 @@ const addTask = document.querySelector(".add-task");
 const addBtn = document.querySelector(".addbtn");
 const searchTask = document.querySelector(".search-task");
 const sortBtn = document.querySelector(".sort");
+const select = document.querySelector(".select");
 
 const tasks = [
   {
-    id: Date.now(),
+    id: Date.now() + 1,
     title: "Сделать домашку",
     completed: true,
     important: true,
   },
   {
-    id: Date.now(),
+    id: Date.now() + 2,
     title: "Помыть посуду",
     completed: false,
     important: false,
   },
   {
-    id: Date.now(),
+    id: Date.now() + 3,
     title: "Подготовиться к контрольной по математике",
     completed: false,
     important: true,
@@ -28,17 +29,25 @@ const tasks = [
 ];
 
 function renderTask() {
+  tasksResulat.innerHTML = "";
+  const ol = document.createElement("ol");
   for (let task of tasks) {
+    tasksResulat.append(ol);
+    const li = document.createElement("li");
     const cardTask = document.createElement("div");
+    cardTask.classList.add("card__task");
     const title = document.createElement("p");
     const btnDel = document.createElement("button");
     title.innerHTML = task.title;
     cardTask.append(title);
     cardTask.append(btnDel);
     btnDel.innerHTML = "Удалить";
-    btnDel.dataset.id = task.id
-    tasksResulat.append(cardTask);
+    btnDel.classList.add("btnDel");
+    btnDel.dataset.id = task.id;
+    li.append(cardTask);
+    ol.append(li);
   }
+  delTask();
 }
 renderTask();
 
@@ -81,9 +90,24 @@ function getLongestTask() {
 // console.log(getLongestTask());
 
 addBtn.addEventListener("click", () => {
-  tasks.push({ title: addTask.value });
-  tasksResulat.innerHTML = "";
+  let important;
+
+  if (select.value === "important") {
+    important = true;
+  } else if (select.value === "not-important") {
+    important = false;
+  } else if (select.value === ''){
+    alert('Выберите приоритет')
+  }
+
+  tasks.push({
+    title: addTask.value,
+    id: Date.now(),
+    completed: false,
+    important: important,
+  });
   renderTask();
+  console.log(tasks);
 });
 
 searchTask.addEventListener("input", () => {
@@ -99,7 +123,6 @@ function sortTasks() {
 
 sortBtn.addEventListener("click", () => {
   sortTasks();
-  tasksResulat.innerHTML = "";
   renderTask();
   console.log(tasks);
 });
@@ -107,8 +130,15 @@ sortBtn.addEventListener("click", () => {
 function delTask() {
   const delTaskBtn = document.querySelectorAll(".btnDel");
   for (let delBtn of delTaskBtn) {
-    console.log(delBtn);
+    delBtn.addEventListener("click", () => {
+      const id = delBtn.dataset.id;
+      for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].id == id) {
+          console.log(i);
+          tasks.splice(i, 1);
+          renderTask();
+        }
+      }
+    });
   }
-  console.log(delTaskBtn);
 }
-delTask();
